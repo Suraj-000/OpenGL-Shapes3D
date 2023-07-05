@@ -4,3 +4,7 @@
 Cube
 
 https://github.com/Suraj-000/OpenGL-Shapes3D/assets/83648833/3403737d-7ccd-49ec-be62-5ff412e05eb5
+
+Pyramid
+
+https://github.com/Suraj-000/OpenGL-Shapes3D/assets/83648833/38da7adf-7667-4d05-a724-407b8d39c8d6
