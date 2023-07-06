@@ -14,8 +14,8 @@ using namespace std;
 #include "Shader.h"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
-GLfloat vertices[310];
-GLuint indices2[360];
+GLfloat vertices[1000000];
+GLuint indices2[1000000];
 int n=12;
 
 void sphereCoordinates(GLfloat r);
@@ -114,8 +114,8 @@ int main()
         
         glm::mat4 model = glm::mat4( 1.0f );
         glm::mat4 view = glm::mat4( 1.0f );
-        model = glm::rotate( model, ( GLfloat)glfwGetTime( ) * 2.0f, glm::vec3( 0.5f, 0.6f, 0.4f ) );
-        view = glm::translate( view, glm::vec3( 0.0f, 0.0f, -2.0f ) );
+        model = glm::rotate( model, ( GLfloat)glfwGetTime( ) *1.0f, glm::vec3( 1.0f, 1.0f, 0.0f ) );
+        view = glm::translate( view, glm::vec3( 0.0f, 0.0f, -1.0f ) );
         
         GLint modelLoc = glGetUniformLocation( ourShader.Program, "model" );
         GLint viewLoc = glGetUniformLocation( ourShader.Program, "view" );
@@ -142,117 +142,71 @@ int main()
 }
 
 void sphereCoordinates(GLfloat r){
+    
+    int longitude=360;
+    int latitude=180;
+    float angle0=M_PI*2/longitude;
+    float angle1=M_PI/latitude;
+
     vector<float> v;
-    float angle0=3.14/6;
-    v.push_back(0.0);
-    v.push_back(r*cos(0.0));
-    v.push_back(0.0);
-    v.push_back(0.5);
-    v.push_back(-1.0);
-    for(int i=1;i<=5;i++){
-    float y=r*cos(angle0*i);
-        for(int j=0;j<12;j++){
-            float x=r*sin(angle0*i)*sin(angle0*j);
-            float z=r*sin(angle0*i)*cos(angle0*j);
+
+    for(int i=0;i<=latitude+1;i++){
+        for(int j=0;j<longitude;j++){
+            float x=r*sin(angle1*i)*sin(angle0*j);
+            float y=r*cos(angle1*i);
+            float z=r*sin(angle1*i)*cos(angle0*j);
             v.push_back(x);
             v.push_back(y);
             v.push_back(z);
-            v.push_back(0.5);
-            v.push_back(1.0);
+            v.push_back(angle0*j/16*M_PI);
+            v.push_back(angle1*i+0.05);
+            }
         }
-    }
-    v.push_back(0.0);
-    v.push_back(-r*cos(0.0));
-    v.push_back(0.0);
-    v.push_back(0.0);
-    v.push_back(1.0);
 
-    vector<int> ind;
+    vector<float> ind;
 
-    for(int i=1;i<12;i++){
+    for(int i=1;i<2*longitude;i++){
         ind.push_back(0);
         ind.push_back(i);
         ind.push_back(i+1);
-    }
+        }
     ind.push_back(0);
-        ind.push_back(12);
-        ind.push_back(1);
-
-    int n=12;
-    for(int i=1;i<=11;i++){
-         ind.push_back(i);
-        ind.push_back(i+1);
-        ind.push_back(n+i);
-         ind.push_back(n+i);
-        ind.push_back(n+i+1);
-        ind.push_back(i+1);
-    }
-             ind.push_back(12);
-        ind.push_back(1);
-        ind.push_back(24);
-         ind.push_back(24);
-        ind.push_back(13);
-        ind.push_back(1);
-
-        for(int i=n+1;i<n+12;i++){
-         ind.push_back(i);
-        ind.push_back(i+1);
-        ind.push_back(n+i);
-         ind.push_back(n+i);
-        ind.push_back(n+i+1);
-        ind.push_back(i+1);
-    }
-           ind.push_back(24);
-        ind.push_back(13);
-        ind.push_back(36);
-         ind.push_back(36);
-        ind.push_back(25);
-        ind.push_back(13);
-
-        for(int i=2*n+1;i<3*n;i++){
-        ind.push_back(i);
-        ind.push_back(i+1);
-        ind.push_back(n+i);
-        ind.push_back(n+i);
-        ind.push_back(n+i+1);
-        ind.push_back(i+1);
-    }
-        ind.push_back(36);
-        ind.push_back(25);
-        ind.push_back(48);
-        ind.push_back(48);
-        ind.push_back(37);
-        ind.push_back(25);
-
-    for(int i=3*n+1;i<4*n;i++){
-        ind.push_back(i);
-        ind.push_back(i+1);
-        ind.push_back(n+i);
-        ind.push_back(n+i);
-        ind.push_back(n+i+1);
-        ind.push_back(i+1);
-    }
-        ind.push_back(48);
-        ind.push_back(37);
-        ind.push_back(60);
-        ind.push_back(60);
-        ind.push_back(49);
-        ind.push_back(37);
-
-        for(int i=4*n+1;i<5*n;i++){
-        ind.push_back(i);
-        ind.push_back(i+1);
-        ind.push_back(61);
-    }
-            ind.push_back(60);
-        ind.push_back(49);
-        ind.push_back(61);
-
+    ind.push_back(2*longitude);
+    ind.push_back(1);
     
-for(int i=0;i<v.size();i++){
-    vertices[i]=(GLfloat)v[i];
-}
-for(int i=0;i<ind.size();i++){
-indices2[i]=(GLuint)ind[i];
-}
-}
+    int n=0;
+    int p=2*longitude;
+
+    for(int j=0;j<latitude;j++){
+        for(int i=n+1;i<n+p;i++){
+            ind.push_back(i);
+            ind.push_back(i+1);
+            ind.push_back(p+i);
+            ind.push_back(p+i);
+            ind.push_back(p+i+1);
+            ind.push_back(i+1);
+        }
+        n+=p;
+        ind.push_back(n);
+        ind.push_back(n-p+1);
+        ind.push_back(n+p);
+        ind.push_back(n+p);
+        ind.push_back(n+1);
+        ind.push_back(n-p+1);
+    }
+    for(int i=n+1;i<n+p;i++){
+        ind.push_back(i);
+        ind.push_back(i+1);
+        ind.push_back(n+p+1);
+        }
+    ind.push_back(n+p);
+    ind.push_back(n+1);
+    ind.push_back(n+p+1);
+    
+    for(int i=0;i<v.size();i++){
+        vertices[i]=(GLfloat)v[i];
+        }
+    for(int i=0;i<ind.size();i++){
+        indices2[i]=(GLuint)ind[i];
+        }
+    }
