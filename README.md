@@ -15,5 +15,6 @@ https://github.com/Suraj-000/OpenGL-Shapes3D/assets/83648833/9fd4b592-a750-4d4c-
 
 Sphere
 
-https://github.com/Suraj-000/OpenGL-Shapes3D/assets/83648833/fa30a966-2961-4ff2-b23b-f49c1c8d595d
+https://github.com/Suraj-000/OpenGL-Shapes3D/assets/83648833/e6105c2a-d9c3-4064-bd0e-4c110f0e0709
+
 
